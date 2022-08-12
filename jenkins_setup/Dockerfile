@@ -24,14 +24,24 @@ VOLUME /var/jenkins_home
 
 COPY *.groovy /usr/share/jenkins/ref/init.groovy.d/
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
-
 COPY jenkins*.sh  ./
-RUN  ./jenkins_install.sh 
+RUN chmod +x jenkins*.sh
 
-CMD ["Jenkins", "start"]
+RUN echo -e "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+RUN ./jenkins_install.sh 
+
+EXPOSE 8080
+
+#CMD ["java","-jar","/usr/share/java/jenkins.war"]
+
 
 #RUN wget https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/2.10.0/jenkins-plugin-manager-2.10.0.jar
 
 #CMD ["./jenkins_plugins_install.sh"]
 
 CMD ["sleep", "infinity"]
+
+#COPY jenkins-support /usr/local/bin/jenkins-support
+#COPY jenkinsnew.sh /usr/local/bin/jenkinsnew.sh
+#ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkinsnew.sh"]
